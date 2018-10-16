@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Cropper.js Demo</title>
+    <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/cropper/2.3.3/cropper.css'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <style>
+        .someSection{
+
+        }
+        .page-profile{
+
+        }
+        canvas {
+            max-width: 400px;
+            height: auto;
+        }
+
+        .preview {
+            max-height: 150px;
+            width: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="someSection">
+        <div class="page-profile">
+            <div class="upload">
+                <input type="file" id="fileInput" accept="image/*" />
+            </div>
+            <div class="previewAndCrop" style="display:none;">
+                <canvas id="canvas">
+                    Your browser does not support the HTML5 canvas element.
+                </canvas>
+                <input type="button" id="btnCrop" value="Crop" />
+            </div>
+            <div class="previewResult" id="result" style="display:none;">
+                <img class="preview" />
+                <input type="button" id="Change" value="Change" />
+            </div>
+        </div>
+    </div>
+
+    <div class="someSection">
+        <div class="page-profile">
+            <div class="upload2">
+                <input type="file" id="fileInput2" accept="image/*" />
+            </div>
+            <div class="previewAndCrop2" style="display:none;">
+                <canvas id="canvas2">
+                    Your browser does not support the HTML5 canvas element.
+                </canvas>
+                <input type="button" id="btnCrop2" value="Crop" />
+            </div>
+            <div class="previewResult2" id="result2" style="display:none;">
+                <img class="preview2" />
+                <input type="button" id="Change2" value="Change" />
+            </div>
+        </div>
+    </div>
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/cropper/2.3.3/cropper.js'></script>
+
+    <script>
+        var canvas = $("#canvas"),
+         context = canvas.get(0).getContext("2d");
+        var isChanged = false;
+        $('#fileInput').on('change', function () {
+
+            if (this.files && this.files[0]) {
+                if (this.files[0].type.match(/^image\//)) {
+                    //Prepare Page
+                    $('.upload').hide();
+                    $('.previewAndCrop').show();
+
+                    //Read File
+                    var reader = new FileReader();
+                    reader.onload = function (evt) {
+                        var img = new Image();
+                        img.onload = function () {
+                            context.canvas.height = img.height;
+                            context.canvas.width = img.width;
+                            context.drawImage(img, 0, 0);
+                            var cropper = canvas.cropper({
+                                aspectRatio: 1 / 1
+                            });
+                            $('#btnCrop').click(function () {
+                                // Get a string base 64 data url
+                                var croppedImageDataURL = canvas.cropper('getCroppedCanvas').toDataURL("image/png");
+                                $('.preview').attr('src', croppedImageDataURL);
+
+                                //Prepare Page
+                                $('.previewAndCrop').hide();
+                                $('.previewResult').show();
+                            });
+
+                            $('#Change').on('click', function () {
+                                $('.previewResult').hide();
+                                $('.upload').show();
+                                $('#fileInput').val('');
+                                isChanged = true;
+                            });
+                        };
+                        if (isChanged) {
+                            canvas.cropper('replace', evt.target.result);
+                        }
+                        else {
+                            img.src = evt.target.result;
+                        }
+                    };
+                    reader.readAsDataURL(this.files[0]);
+                }
+                else {
+                    alert("Invalid file type! Please select an image file.");
+                }
+            }
+            else {
+                alert('No file(s) selected.');
+            }
+        });
+
+        var canvas2 = $("#canvas2"),
+         context2 = canvas2.get(0).getContext("2d");
+        var isChanged2 = false;
+        $('#fileInput2').on('change', function () {
+
+            if (this.files && this.files[0]) {
+                if (this.files[0].type.match(/^image\//)) {
+                    //Prepare Page
+                    $('.upload2').hide();
+                    $('.previewAndCrop2').show();
+
+                    //Read File
+                    var reader2 = new FileReader();
+                    reader2.onload = function (evt) {
+                        var img2 = new Image();
+                        img2.onload = function () {
+                            context2.canvas.height = img2.height;
+                            context2.canvas.width = img2.width;
+                            context2.drawImage(img2, 0, 0);
+                            var cropper2 = canvas2.cropper({
+                                aspectRatio: 1 / 1
+                            });
+                            $('#btnCrop2').click(function () {
+                                // Get a string base 64 data url
+                                var croppedImageDataURL2 = canvas2.cropper('getCroppedCanvas').toDataURL("image/png");
+                                $('.preview2').attr('src', croppedImageDataURL2);
+
+                                //Prepare Page
+                                $('.previewAndCrop2').hide();
+                                $('.previewResult2').show();
+                            });
+
+                            $('#Change2').on('click', function () {
+                                $('.previewResult2').hide();
+                                $('.upload2').show();
+                                $('#fileInput2').val('');
+                                isChanged2 = true;
+                            });
+                        };
+                        if (isChanged2) {
+                            canvas2.cropper('replace', evt.target.result);
+                        }
+                        else {
+                            img2.src = evt.target.result;
+                        }
+                    };
+                    reader2.readAsDataURL(this.files[0]);
+                }
+                else {
+                    alert("Invalid file type! Please select an image file.");
+                }
+            }
+            else {
+                alert('No file(s) selected.');
+            }
+        });
+
+    </script>
+
+
+</body>
+</html>
